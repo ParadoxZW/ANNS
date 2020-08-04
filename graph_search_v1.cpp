@@ -122,7 +122,6 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
     std::set<Candidate> pool;
     std::set<Candidate>::iterator it, it_;
     size_t cnt;   // to count the size of pool
-    size_t idx;
     bool checked[MAXN];
     bool inset[MAXN];
     memset(checked, false, MAXN);
@@ -133,13 +132,11 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
     // beam search
     while (true) {
         // find first unchecked point
-        idx = 0;
         for (it = pool.begin() ; it != pool.end(); it++) {
-            if (!checked[idx]) {
-                checked[idx] = true; // mark as checked
+            if (!checked[it->idx]) {
+                checked[it->idx] = true; // mark as checked
                 break;
             }
-            idx++;
         }
         if (it != pool.end()) {          // fail to find, so all checked.
             size_t p = it->idx;          // index of point finded

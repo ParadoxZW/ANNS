@@ -122,7 +122,7 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
     std::set<Candidate> pool;
     std::set<Candidate>::iterator it, it_;
     size_t cnt;   // to count the size of pool
-    size_t idx;
+    // size_t idx;
     bool checked[MAXN];
     bool inset[MAXN];
     memset(checked, false, MAXN);
@@ -133,13 +133,12 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
     // beam search
     while (true) {
         // find first unchecked point
-        idx = 0;
         for (it = pool.begin() ; it != pool.end(); it++) {
-            if (!checked[idx]) {
-                checked[idx] = true; // mark as checked
+            if (!checked[it->idx]) {
+                checked[it->idx] = true; // mark as checked
+                std::cout << "check: " << it->idx << " |";
                 break;
             }
-            idx++;
         }
         if (it != pool.end()) {          // fail to find, so all checked.
             size_t p = it->idx;          // index of point finded
@@ -158,6 +157,11 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
                 cnt--;
             }
             // std::cout << pool.size() << std::endl;
+            for (auto tmp:pool) {
+                // std::cout << " (" << tmp.idx << ", " << tmp.dist << ")";
+                std::cout << " " << tmp.idx;
+            }
+            std::cout << std::endl;
         } else {
             break;
         }
@@ -186,7 +190,8 @@ void graph_search(MatrixXf &database, MatrixXf &querytable, Graph &graph,
             t1 = t2;
         }
         VectorXf query = querytable.row(qid);
-        size_t start_idx = rand() % points_num;
+        size_t start_idx = 776202; //rand() % points_num;
+        std::cout << "start: " << start_idx << std::endl;
         VectorXi neighbors(k);
         graph_search_(database, query, graph, start_idx, k, 
             pool_size, neighbors, points_num, queries_num, dim);
@@ -230,13 +235,11 @@ int main(int argc, char **argv) {
     load_fvecs("./sift/sift_query.fvecs", querytable, queries_num, dim);
     load_ivecs("./sift/sift_groundtruth.ivecs", groundtruth, queries_num, k_max);
 
-    std::cout << "points_num: " << points_num << std::endl
-              << "queries_num: " << queries_num << std::endl
-              << "k_max: " << k_max << std::endl
-              << "data dimension: " << dim << std::endl;
     Graph graph;
     load_graph("./sift/sift_100NN_100.graph", graph);
     std::cout << "Graph loaded." << std::endl;
+    VectorXi v3 = (*groundtruth).row(0);
+    std::cout << v3.head(10).adjoint() << std::endl;
 
     MatrixXi predicts(queries_num, k);
     srand((unsigned) time(NULL));
