@@ -1,8 +1,0 @@
-run on sift
-points_num: 1000000
-queries_num: 10000
-k_max: 100
-data dimension: 128
-Graph loaded.
-
-Start searching!
