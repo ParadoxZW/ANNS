@@ -168,16 +168,18 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
     }
 }
 
-void graph_search(MatrixXf &database, MatrixXf &querytable, Graph &graph,
+double graph_search(MatrixXf &database, MatrixXf &querytable, Graph &graph,
                   size_t k, size_t pool_size, MatrixXi &predicts, unsigned points_num,
                   unsigned queries_num, unsigned dim) {
     std::cout << "\nStart searching!" << std::endl;
-    auto t1 = std::chrono::high_resolution_clock::now();
     auto t2 = std::chrono::high_resolution_clock::now();
+    auto t1 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> total = t2 - t1;
     for (size_t qid = 0; qid < queries_num; qid++) {
         if (!(qid % 100)) {
             t2 = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> diff = t2 - t1;
+            total += diff;
             printf("[%05d/%05d] Queries Per Second: %.4f", qid, queries_num, 100 / diff.count());
             std::cout << std::endl;
             t1 = t2;
@@ -188,8 +190,8 @@ void graph_search(MatrixXf &database, MatrixXf &querytable, Graph &graph,
         graph_search_(database, query, graph, start_idx, k, 
             pool_size, neighbors, points_num, queries_num, dim);
         predicts.row(qid) = neighbors;
-
     }
+    return queries_num / total.count();
 }
 
 double average_recall(MatrixXi &predicts, MatrixXi &groundtruth, unsigned queries_num, unsigned k) {
@@ -220,7 +222,7 @@ int main(int argc, char **argv) {
     MatrixXf *database = NULL;
     MatrixXf *querytable = NULL;
     MatrixXi *groundtruth = NULL;
-    double acc;
+    double acc, qps;
     unsigned points_num, queries_num, dim, k_max;
     if (argc != 7) {
         std::cout << "The program needs 6 parameters!" << std::endl;
@@ -246,9 +248,10 @@ int main(int argc, char **argv) {
 
     MatrixXi predicts(queries_num, k);
     srand((unsigned) time(NULL));
-    graph_search(*database, *querytable, graph, k, pool_size, predicts,
-                 points_num, queries_num, dim);
+    qps = graph_search(*database, *querytable, graph, k, pool_size, predicts,
+                    points_num, queries_num, dim);
     acc = average_recall(predicts, *groundtruth, queries_num, k);
     std::cout << "Average recall: " << acc << std::endl;
+    std::cout << "Queries per second: " << qps << std::endl;
     return 0;
 }
