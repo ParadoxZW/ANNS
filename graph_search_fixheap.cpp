@@ -25,24 +25,24 @@ typedef std::vector<float> VectorXf;
 template <class T>
 class FixedHeap {
     public:
-        unsigned n;
-        unsigned max_size;
+        int n;
+        int max_size;
         std::vector<T> heap;
-        FixedHeap(unsigned size) {
+        FixedHeap(int size) {
             n = 0;
             max_size = size;
             heap = std::vector<T>(size);
         }
-        void downAdjust(unsigned low, unsigned high);
-        void upAdjust(unsigned low, unsigned high);
+        void downAdjust(int low, int high);
+        void upAdjust(int low, int high);
         void insert(T x);
         void heapSort();
 };
 
 template <class T>
-void FixedHeap<T>::downAdjust(unsigned low, unsigned high) {
+void FixedHeap<T>::downAdjust(int low, int high) {
     // low为欲调整节点, high为堆的最后一个元素
-    unsigned i = low, j = i * 2 + 1;
+    int i = low, j = i * 2 + 1;
     while (j <= high) {
         if (j + 1 <= high && heap[j] < heap[j+1]) {
             j++;
@@ -50,7 +50,7 @@ void FixedHeap<T>::downAdjust(unsigned low, unsigned high) {
         if (heap[i] < heap[j]) {
             std::swap(heap[j], heap[i]);
             i = j;
-            j = i * 2;
+            j = i * 2 + 1;
         } else {
             break;
         }
@@ -58,14 +58,14 @@ void FixedHeap<T>::downAdjust(unsigned low, unsigned high) {
 }
 
 template <class T> 
-void FixedHeap<T>::upAdjust(unsigned low, unsigned high) {
+void FixedHeap<T>::upAdjust(int low, int high) {
     // low为1, high为欲调整节点
-    unsigned i = high, j = i / 2;
+    int i = high, j = (i - 1) / 2;
     while (j >= low) {
         if (heap[j] < heap[i]) {
             std::swap(heap[j], heap[i]);
             i = j;
-            j = i / 2;
+            j = (i - 1) / 2;
         } else {
             break;
         }
@@ -88,7 +88,7 @@ void FixedHeap<T>::insert(T x) {
 template <class T> 
 void FixedHeap<T>::heapSort() {
     for (int i = n - 1; i > 0; i--) {
-        std::swap(heap[i], heap[1]);
+        std::swap(heap[i], heap[0]);
         FixedHeap<T>::downAdjust(0, i - 1);
     }
 }
@@ -198,7 +198,8 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
                   unsigned queries_num, unsigned dim) {
     FixedHeap<Candidate> pool(pool_size);
     FixedHeap<Candidate> spool(pool_size);
-    auto it = spool.heap.begin();
+    int j;
+    // auto it = spool.heap.begin();
     bool checked[MAXN];
     bool inset[MAXN];
     memset(checked, false, MAXN);
@@ -212,14 +213,16 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
         spool = pool;
         spool.heapSort();
         auto &vec = spool.heap;
-        for (it = vec.begin() ; it != vec.end(); it++) {
-            if (!checked[it->idx]) {
-                checked[it->idx] = true; // mark as checked
+            // std::cout << pool.n << std::endl;
+        for (j = 0; j < pool.n; j++) {
+        // std::cout << pool.n << '|' << j << std::endl;
+            if (!checked[vec[j].idx]) {
+                checked[vec[j].idx] = true; // mark as checked
                 break;
             }
         }
-        if (it != vec.end()) {           // fail to find, so all checked.
-            size_t p = it->idx;          // index of point finded
+        if (j < pool.n) {                    // fail to find, so all checked.
+            size_t p = vec[j].idx;       // index of point finded
             for (unsigned i:graph[p]) {    // insert all neighbors
                 if (!inset[i]) {
                     pool.insert(Candidate(i, query, database));
@@ -228,6 +231,7 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
             }
         } else {
             break;
+            // std::cout << 2 << std::endl;
         }
     }
     
@@ -235,10 +239,10 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
     spool = pool;
     spool.heapSort();
     auto &vec = spool.heap;
-    it = vec.begin();
+    // it = vec.begin();
     for (unsigned i = 0; i < k; i++) {
-        neighbors[i] = it->idx;
-        it++;
+        // std::cout << vec[i].dist << std::endl;
+        neighbors[i] = vec[i].idx;
     }
 }
 
@@ -323,6 +327,7 @@ int main(int argc, char **argv) {
     MatrixXi predicts;
     // make_shape(predicts, queries_num, k);
     srand((unsigned) time(NULL));
+    // queries_num = 1;
     qps = graph_search(database, querytable, graph, k, pool_size, predicts,
                     points_num, queries_num, dim);
     acc = average_recall(predicts, groundtruth, queries_num, k);

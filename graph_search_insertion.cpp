@@ -21,9 +21,48 @@ typedef std::vector<std::vector<float> > MatrixXf;
 typedef std::vector<unsigned> VectorXi;
 typedef std::vector<float> VectorXf;
 
+template <class T>
+class InsertVec {
+    // sorted vector maintained by insertion sort,
+    // the vector have a largest size.
+    public:
+      int n;
+      int max_size;
+      std::vector<T> vec;
+      InsertVec(int size) {
+          n = 0;
+          max_size = size;
+          vec = std::vector<T>(size);
+      }
+      void insert(T x);
+      void insert_(T x, int i);
+};
+
+template <class T>
+void InsertVec<T>::insert_(T x, int i) {
+    while (i >= 1 && vec[i] < vec[i-1]) {
+        std::swap(vec[i], vec[i-1]);
+        i--;
+    }
+}
+
+template <class T>
+void InsertVec<T>::insert(T x) {
+    if (n >= max_size) {
+        if (x < vec[n-1]) {
+            vec[n-1] = x;
+            InsertVec<T>::insert_(x, n - 1);
+        }
+    } else {
+        vec[n++] = x;
+        InsertVec<T>::insert_(x, n - 1);
+    }
+}
+
 struct Candidate { // TODO: class
     size_t idx;
     float dist;
+    Candidate(): idx(0), dist(0.) {}
     Candidate(size_t idx, VectorXf &query, MatrixXf &base) {
         this->idx = idx;
         // this->dist = (query - base.row(idx).adjoint()).array().square().sum();
@@ -125,12 +164,14 @@ void load_ivecs(const char *filename, MatrixXi &data, unsigned &num,
     in.close();
 }
 
-void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t start_idx,
-                  size_t k, size_t pool_size, VectorXi &neighbors, unsigned points_num,
-                  unsigned queries_num, unsigned dim) {
-    std::set<Candidate> pool;
-    std::set<Candidate>::iterator it, it_;
-    size_t cnt;   // to count the size of pool
+void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph,
+                   size_t start_idx, size_t k, size_t pool_size,
+                   VectorXi &neighbors, unsigned points_num,
+                   unsigned queries_num, unsigned dim) {
+    InsertVec<Candidate> pool(pool_size);
+    // FixedHeap<Candidate> spool(pool_size);
+    int j;
+    // auto it = spool.heap.begin();
     bool checked[MAXN];
     bool inset[MAXN];
     memset(checked, false, MAXN);
@@ -141,39 +182,39 @@ void graph_search_(MatrixXf &database, VectorXf &query, Graph &graph, size_t sta
     // beam search
     while (true) {
         // find first unchecked point
-        for (it = pool.begin() ; it != pool.end(); it++) {
-            if (!checked[it->idx]) {
-                checked[it->idx] = true; // mark as checked
+        // spool = pool;
+        // spool.heapSort();
+        auto &vec = pool.vec;
+        // std::cout << pool.n << std::endl;
+        for (j = 0; j < pool.n; j++) {
+            // std::cout << pool.n << '|' << j << std::endl;
+            if (!checked[vec[j].idx]) {
+                checked[vec[j].idx] = true; // mark as checked
                 break;
             }
         }
-        if (it != pool.end()) {          // fail to find, so all checked.
-            size_t p = it->idx;          // index of point finded
-            cnt = pool.size();
-            for (unsigned i:graph[p]) {    // insert all neighbors
+        if (j < pool.n) {                 // fail to find, so all checked.
+            size_t p = vec[j].idx;        // index of point finded
+            for (unsigned i : graph[p]) { // insert all neighbors
                 if (!inset[i]) {
                     pool.insert(Candidate(i, query, database));
                     inset[i] = true;
-                    cnt++;
                 }
             }
-            // std::cout << cnt << pool.size() << std::endl;
-            // erase extra candidates
-            while (cnt > pool_size) {
-                pool.erase(--pool.end());
-                cnt--;
-            }
-            // std::cout << pool.size() << std::endl;
         } else {
             break;
+            // std::cout << 2 << std::endl;
         }
     }
-    
+
     // collect neighbors
-    it = pool.begin();
+    // spool = pool;
+    // spool.heapSort();
+    auto &vec = pool.vec;
+    // it = vec.begin();
     for (unsigned i = 0; i < k; i++) {
-        neighbors[i] = it->idx;
-        it++;
+        // std::cout << vec[i].dist << std::endl;
+        neighbors[i] = vec[i].idx;
     }
 }
 
@@ -258,6 +299,7 @@ int main(int argc, char **argv) {
     MatrixXi predicts;
     // make_shape(predicts, queries_num, k);
     srand((unsigned) time(NULL));
+    // queries_num = 1;
     qps = graph_search(database, querytable, graph, k, pool_size, predicts,
                     points_num, queries_num, dim);
     acc = average_recall(predicts, groundtruth, queries_num, k);
