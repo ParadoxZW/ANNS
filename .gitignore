@@ -6,7 +6,8 @@
 *.graph
 *.zip
 *.txt
-*.sh
+# *.sh
+*.cvecs
 *.mat
 *.out
 # Byte-compiled / optimized / DLL files
