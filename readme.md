@@ -9,9 +9,11 @@ variants to improve the performance of the algorithm.
 
 + OS: Ubuntu/Debian
 + Compiler: g++ >= 4.9
++ Software/Packages: Anaconda >= 4.5.1, Matlab
 
 Download the data from http://corpus-texmex.irisa.fr, and construct a kNN-graph.
 And organize the files as follow:
+
 ```
 .
 ├── gist
@@ -26,6 +28,11 @@ And organize the files as follow:
 │   ├── sift_groundtruth.ivecs
 │   ├── sift_learn.fvecs
 │   └── sift_query.fvecs
+```
+
+To use OPQ encoding of python version, you need faiss. Run
+```Bash
+conda install faiss-cpu -c pytorch
 ```
 
 ## Get Started
@@ -44,6 +51,10 @@ You can find programs to apply OPQ encoding process:
 + `encode.py` faiss version
 + `re-impl/` C++ version (unfinished)
 
+After you finish encoding, run `gnns-opq.sh` to test graph-based ANNS with OPQ encoding.
+
 ## TODO
 
-- [ ] OPQ re-implement
+- [ ] re-implement OPQ encoding in C++
+- [ ] re-imlement NSG
+- [ ] conduct more experiments about graph-based ANNS with OPQ encoding
