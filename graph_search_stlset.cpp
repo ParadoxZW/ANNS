@@ -15,11 +15,11 @@
 
 #define MAXN 1000100
 
-typedef std::vector<std::vector<unsigned> > MatrixXi;
-typedef MatrixXi Graph;
-typedef std::vector<std::vector<float> > MatrixXf;
 typedef std::vector<unsigned> VectorXi;
 typedef std::vector<float> VectorXf;
+typedef std::vector<VectorXi> MatrixXi;
+typedef std::vector<VectorXf> MatrixXf;
+typedef MatrixXi Graph;
 
 struct Candidate { // TODO: class
     size_t idx;

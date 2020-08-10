@@ -1,10 +1,10 @@
 m = [];
-for i=1:16
+for i=1:4
     t = centers_table_opq_np{i};
-    mm = t(code_opq_np(1, i), :);
+    mm = t(code_opq_np(2, i), :);
     m = [m mm];
 end
-xx = R_opq_np*Xtrain(1,:);
+xx = Xtrain(2,:)*R_opq_np;
 norm(m - xx)
 % fvecs_write('R.fvecs', R_opq_np);
 % for i=1:M

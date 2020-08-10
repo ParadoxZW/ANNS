@@ -23,7 +23,7 @@ do
     ./$DATASET/$DATASET"_base.fvecs" \
     ./$DATASET/$DATASET"_query.fvecs" \
     ./$DATASET/$DATASET"_groundtruth.ivecs" \
-    ./$DATASET/$DATASET"_100NN_100.graph" # 0.344472
+    ./$DATASET/$DATASET"_100NN_100.graph"
 done
 
 f=$f1
@@ -36,7 +36,7 @@ do
     ./$DATASET/$DATASET"_base.fvecs" \
     ./$DATASET/$DATASET"_query.fvecs" \
     ./$DATASET/$DATASET"_groundtruth.ivecs" \
-    ./$DATASET/$DATASET"_100NN_100.graph" # 0.344472
+    ./$DATASET/$DATASET"_100NN_100.graph"
 done
 
 
@@ -50,7 +50,7 @@ do
     ./$DATASET/$DATASET"_base.fvecs" \
     ./$DATASET/$DATASET"_query.fvecs" \
     ./$DATASET/$DATASET"_groundtruth.ivecs" \
-    ./$DATASET/$DATASET"_100NN_100.graph" # 0.344472
+    ./$DATASET/$DATASET"_100NN_100.graph"
 done
 
 f=$f3
@@ -63,7 +63,7 @@ do
     ./$DATASET/$DATASET"_base.fvecs" \
     ./$DATASET/$DATASET"_query.fvecs" \
     ./$DATASET/$DATASET"_groundtruth.ivecs" \
-    ./$DATASET/$DATASET"_100NN_100.graph" # 0.344472
+    ./$DATASET/$DATASET"_100NN_100.graph"
 done
 
 f=$f4
@@ -76,7 +76,7 @@ do
     ./$DATASET/$DATASET"_base.fvecs" \
     ./$DATASET/$DATASET"_query.fvecs" \
     ./$DATASET/$DATASET"_groundtruth.ivecs" \
-    ./$DATASET/$DATASET"_100NN_100.graph" # 0.344472
+    ./$DATASET/$DATASET"_100NN_100.graph"
 done
 
 f=$f5
@@ -89,7 +89,7 @@ do
     ./$DATASET/$DATASET"_base.fvecs" \
     ./$DATASET/$DATASET"_query.fvecs" \
     ./$DATASET/$DATASET"_groundtruth.ivecs" \
-    ./$DATASET/$DATASET"_100NN_100.graph" # 0.344472
+    ./$DATASET/$DATASET"_100NN_100.graph"
 done
 
 f=$f6
@@ -102,5 +102,5 @@ do
     ./$DATASET/$DATASET"_base.fvecs" \
     ./$DATASET/$DATASET"_query.fvecs" \
     ./$DATASET/$DATASET"_groundtruth.ivecs" \
-    ./$DATASET/$DATASET"_100NN_100.graph" # 0.344472
+    ./$DATASET/$DATASET"_100NN_100.graph"
 done

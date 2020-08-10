@@ -328,6 +328,7 @@ int main(int argc, char **argv) {
     MatrixXi predicts;
     // make_shape(predicts, queries_num, k);
     srand((unsigned) time(NULL));
+    queries_num = 500;
     qps = graph_search(index, querytable, graph, k, pool_size, predicts,
                     points_num, queries_num, dim);
     acc = average_recall(predicts, groundtruth, queries_num, k);
