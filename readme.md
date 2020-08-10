@@ -34,6 +34,13 @@ To use OPQ encoding of python version, you need faiss. Run
 ```Bash
 conda install faiss-cpu -c pytorch
 ```
+Some of C++ code (almost not) need Eigen. Run
+```Bash
+weget https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz
+tar xzvf eigen-3.3.7.tar.gz
+sudo cp -r eigen-3.3.7/Eigen /usr/local/include/Eigen
+```
+Then you can use `#include <Eigen>` in C++ code.
 
 ## Get Started
 
@@ -46,7 +53,7 @@ You can also compile the code and execute it manually as you want.
 
 ### OPQ encoding
 
-You can find programs to apply OPQ encoding process:
+You can find programs in folder `opq_encode` to apply OPQ encoding process:
 + `matlab_OPQ_release_v1.1/encode.m` matlab version (recommended)
 + `encode.py` faiss version
 + `re-impl/` C++ version (unfinished)
