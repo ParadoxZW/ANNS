@@ -59,6 +59,7 @@ You can find programs in folder `opq_encode` to apply OPQ encoding process:
 + `re-impl/` C++ version (unfinished)
 
 After you finish encoding, run `gnns-opq.sh` to test graph-based ANNS with OPQ encoding.
+You can also download my encoding files from https://pan.baidu.com/s/1DwEVBljrwY6krwnPSqynFA ,password: 6z5e.
 
 ## TODO
 
