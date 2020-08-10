@@ -20,4 +20,4 @@ You can find programs to apply OPQ encoding process:
 
 ## TODO
 
-- [] OPQ re-implement
+- [ ] OPQ re-implement
